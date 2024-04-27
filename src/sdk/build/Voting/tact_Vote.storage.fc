@@ -1,0 +1,143 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode(slice to, int value, int bounce, int mode) inline {
+    return (bounce, to, value, mode, null(), null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int queryId) inline {
+    return (queryId);
+}
+
+;;
+;; Type: DeployAndCastVoteOk
+;; Header: 0xf60d9235
+;; TLB: deploy_and_cast_vote_ok#f60d9235 voter:address candidateInd:uint8 numOfVotes:uint8 = DeployAndCastVoteOk
+;;
+
+builder $DeployAndCastVoteOk$_store(builder build_0, (slice, int, int) v) inline {
+    var (v'voter, v'candidateInd, v'numOfVotes) = v;
+    build_0 = store_uint(build_0, 4128084533, 32);
+    build_0 = __tact_store_address(build_0, v'voter);
+    build_0 = build_0.store_uint(v'candidateInd, 8);
+    build_0 = build_0.store_uint(v'numOfVotes, 8);
+    return build_0;
+}
+
+cell $DeployAndCastVoteOk$_store_cell((slice, int, int) v) inline {
+    return $DeployAndCastVoteOk$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int)) $DeployAndCastVoteOk$_constructor_voter_candidateInd_numOfVotes(slice voter, int candidateInd, int numOfVotes) inline {
+    return (voter, candidateInd, numOfVotes);
+}
+
+;;
+;; Type: CastVote
+;; Header: 0x4d87f18b
+;; TLB: cast_vote#4d87f18b owner:address candidateInd:uint8 numOfVotes:uint8 = CastVote
+;;
+
+(slice, ((slice, int, int))) $CastVote$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1300754827);
+    var v'owner = sc_0~__tact_load_address();
+    var v'candidateInd = sc_0~load_uint(8);
+    var v'numOfVotes = sc_0~load_uint(8);
+    return (sc_0, (v'owner, v'candidateInd, v'numOfVotes));
+}
+
+;;
+;; Type: Vote
+;;
+
+builder $Vote$_store(builder build_0, (slice, slice, int, int) v) inline {
+    var (v'owner, v'voting, v'candidateInd, v'numOfVotes) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = __tact_store_address(build_0, v'voting);
+    build_0 = build_0.store_uint(v'candidateInd, 8);
+    build_0 = build_0.store_uint(v'numOfVotes, 8);
+    return build_0;
+}
+
+(slice, ((slice, slice, int, int))) $Vote$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'voting = sc_0~__tact_load_address();
+    var v'candidateInd = sc_0~load_uint(8);
+    var v'numOfVotes = sc_0~load_uint(8);
+    return (sc_0, (v'owner, v'voting, v'candidateInd, v'numOfVotes));
+}
+
+(slice, ((slice, slice))) $Vote$init$_load(slice sc_0) inline {
+    var v'voting = sc_0~__tact_load_address();
+    var v'owner = sc_0~__tact_load_address();
+    return (sc_0, (v'voting, v'owner));
+}
+
+(slice, slice, int, int) $Vote$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$Vote$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (slice voting, slice owner) = $sc~$Vote$init$_load();
+        $sc.end_parse();
+        return $Vote$_contract_init(voting, owner);
+    }
+}
+
+() $Vote$_contract_store((slice, slice, int, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $Vote$_store(b, v);
+    set_data(b.end_cell());
+}

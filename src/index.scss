@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background-color: #0f0f0f;
+}
+
+#root {
+  height: 100%;
+}
+
+:root {
+  appearance: -moz-win-borderless-glass !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  font-family: "JetBrains Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="url"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none !important;
+}

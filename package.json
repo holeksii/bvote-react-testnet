@@ -1,0 +1,49 @@
+{
+  "name": "bvote-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "prettier": {},
+  "homepage": "https://holeksii.github.io/vote-react",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@orbs-network/ton-access": "^2.3.3",
+    "@ton/blueprint": "^0.18.0",
+    "@ton/core": "~0",
+    "@ton/crypto": "^3.2.0",
+    "@ton/sandbox": "^0.16.0",
+    "@ton/test-utils": "^0.4.2",
+    "@ton/ton": "^13.11.1",
+    "@tonconnect/ui-react": "2.0.0",
+    "autoprefixer": "^10.4.18",
+    "buffer": "^6.0.3",
+    "emoji-mart": "^5.5.2",
+    "emoji-picker-react": "^4.9.2",
+    "gh-pages": "^6.1.1",
+    "postcss": "^8.4.37",
+    "prettier-plugin-tailwindcss": "^0.5.12",
+    "react": "^17.0.0",
+    "react-datepicker": "^6.6.0",
+    "react-dom": "^17.0.0",
+    "react-json-view": "^1.21.3",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "^5.0.1",
+    "tailwindcss": "^3.4.1",
+    "vite-plugin-node-polyfills": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.26",
+    "@types/react-datepicker": "^6.2.0",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react": "^3.0.0",
+    "prettier": "^3.2.5",
+    "sass": "^1.57.1",
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
+  }
+}

@@ -1,0 +1,408 @@
+#pragma version =0.4.3;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_Voting.headers.fc";
+#include "tact_Voting.stdlib.fc";
+#include "tact_Voting.constants.fc";
+#include "tact_Voting.storage.fc";
+
+;;
+;; Contract Voting functions
+;;
+
+(slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $Voting$_contract_init(slice $organization, int $votingId) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = (null(), null(), null(), null(), null(), null(), null(), null(), null());
+    throw_unless(34218, ( __tact_slice_eq_bits($organization, __tact_context_get_sender()) ));
+    $self'owner = __tact_create_address(0, 0);
+    $self'organization = $organization;
+    $self'votingId = $votingId;
+    ($self'candidates'size, $self'candidates'candidates) = $CandidateArray$_constructor_size_candidates(0, null());
+    $self'voteFee = 0;
+    $self'votesPerCandidate = 0;
+    $self'startTime = 0;
+    $self'timeToLive = 0;
+    ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website) = $Metadata$_constructor_name_description_emoji_website(__gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7());
+    return ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), slice) $Voting$_fun_organization((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $self'organization);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), int) $Voting$_fun_votingId((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $self'votingId);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), (int, cell)) $Voting$_fun_candidates((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ($self'candidates'size, $self'candidates'candidates));
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), int) $Voting$_fun_numOfVotes((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    int $num = 0;
+    int $i = 0;
+    while (($i < $self'candidates'size)) {
+        if ((~ null?($Candidate$_load_opt(__tact_dict_get_uint_cell($self'candidates'candidates, 64, $i))))) {
+            var ($candidate'name, $candidate'info, $candidate'votes) = $Candidate$_not_null($Candidate$_load_opt(__tact_dict_get_uint_cell($self'candidates'candidates, 64, $i)));
+            $num = $num + $candidate'votes;
+        }
+        $i = $i + 1;
+    }
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $num);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), int) $Voting$_fun_voteFee((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $self'voteFee);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), int) $Voting$_fun_votesPerCandidate((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $self'votesPerCandidate);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), int) $Voting$_fun_startTime((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $self'startTime);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), int) $Voting$_fun_timeToLive((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $self'timeToLive);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), (slice, slice, slice, slice)) $Voting$_fun_metadata((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website));
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), slice) $Voting$_fun_voteAddress((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self, slice $owner) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    var ($init'code, $init'data) = $Vote$_init_child(__tact_context_sys, my_address(), $owner);
+    slice $voting = $global_contractAddress(($init'code, $init'data));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $voting);
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), (slice, slice, int, int)) $Voting$_fun_basicInfo((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $VotingBasicInfo$_constructor_emoji_name_startTime_endTime($self'metadata'emoji, $self'metadata'name, $self'startTime, ($self'startTime + $self'timeToLive)));
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), (slice, slice, slice, slice, slice, int, int, int, int, int)) $Voting$_fun_allInfo((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $VotingAllInfo$_constructor_organization_owner_emoji_name_description_numOfVotes_voteFee_votesPerCandidate_startTime_endTime($self'organization, $self'owner, $self'metadata'emoji, $self'metadata'name, $self'metadata'description, ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)~$Voting$_fun_numOfVotes(), $self'voteFee, $self'votesPerCandidate, $self'startTime, ($self'startTime + $self'timeToLive)));
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), ()) $Voting$_fun_requireOwner((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    throw_unless(132, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), slice) $Voting$_fun_owner((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), $self'owner);
+}
+
+;;
+;; Receivers of a Contract Voting
+;;
+
+(((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int)), ()) %$Voting$_internal_empty((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+(((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int)), ()) $Voting$_internal_binary_InitVoting((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self, (slice, (int, cell), int, int, int, int) $msg) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    var ($msg'owner, ($msg'candidates'size, $msg'candidates'candidates), $msg'voteFee, $msg'votesPerCandidate, $msg'startTime, $msg'timeToLive) = $msg;
+    $self'owner = $msg'owner;
+    ($self'candidates'size, $self'candidates'candidates) = ($msg'candidates'size, $msg'candidates'candidates);
+    $self'voteFee = $msg'voteFee;
+    $self'votesPerCandidate = $msg'votesPerCandidate;
+    $self'startTime = $msg'startTime;
+    $self'timeToLive = $msg'timeToLive;
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'organization, ($Context$_get_value(__tact_context_get()) - 100000000), false, 0, __gen_cell_comment_4f27a716d80adfccc1d91de805cc4b7919bba8381a0e3b95ae661668795a3a5d()));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+(((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int)), ()) $Voting$_internal_binary_InitVotingWithMetadata((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self, (slice, (int, cell), int, int, int, int, (slice, slice, slice, slice)) $msg) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    var ($msg'owner, ($msg'candidates'size, $msg'candidates'candidates), $msg'voteFee, $msg'votesPerCandidate, $msg'startTime, $msg'timeToLive, ($msg'metadata'name, $msg'metadata'description, $msg'metadata'emoji, $msg'metadata'website)) = $msg;
+    $self'owner = $msg'owner;
+    ($self'candidates'size, $self'candidates'candidates) = ($msg'candidates'size, $msg'candidates'candidates);
+    $self'voteFee = $msg'voteFee;
+    $self'votesPerCandidate = $msg'votesPerCandidate;
+    $self'startTime = $msg'startTime;
+    $self'timeToLive = $msg'timeToLive;
+    ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website) = ($msg'metadata'name, $msg'metadata'description, $msg'metadata'emoji, $msg'metadata'website);
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body($self'organization, ($Context$_get_value(__tact_context_get()) - 100000000), false, 0, __gen_cell_comment_4f27a716d80adfccc1d91de805cc4b7919bba8381a0e3b95ae661668795a3a5d()));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+(((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int)), ()) $Voting$_internal_binary_DeployAndCastVote((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self, (int, int) $msg) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    var ($msg'candidateInd, $msg'numOfVotes) = $msg;
+    throw_unless(54147, (now() >= $self'startTime));
+    throw_unless(59195, (now() <= ($self'startTime + $self'timeToLive)));
+    throw_unless(13397, ($msg'numOfVotes <= $self'votesPerCandidate));
+    int $totalFee = ($self'voteFee * $msg'numOfVotes);
+    throw_unless(51754, ($Context$_get_value(__tact_context_get()) > $totalFee));
+    var ($init'code, $init'data) = $Vote$_init_child(__tact_context_sys, my_address(), __tact_context_get_sender());
+    slice $voting = $global_contractAddress(($init'code, $init'data));
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($voting, ($Context$_get_value(__tact_context_get()) - $totalFee), false, 0, $CastVote$_store_cell($CastVote$_constructor_owner_candidateInd_numOfVotes(__tact_context_get_sender(), $msg'candidateInd, $msg'numOfVotes)), $init'code, $init'data));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+(((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int)), ()) $Voting$_internal_binary_DeployAndCastVoteOk((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self, (slice, int, int) $msg) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    var ($msg'voter, $msg'candidateInd, $msg'numOfVotes) = $msg;
+    var ($cand'name, $cand'info, $cand'votes) = $Candidate$_not_null($Candidate$_load_opt(__tact_dict_get_uint_cell($self'candidates'candidates, 64, $msg'candidateInd)));
+    $self'candidates'candidates~__tact_dict_set_uint_cell(64, $msg'candidateInd, $Candidate$_store_cell($Candidate$_constructor_name_info_votes($cand'name, $cand'info, ($cand'votes + $msg'numOfVotes))));
+    $global_send($SendParameters$_constructor_to_bounce_value_mode($msg'voter, true, 0, (64 + 2)));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+(((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int)), ()) $Voting$_internal_binary_TransferOwnership((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self, (slice) $msg) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    var ($msg'newOwner) = $msg;
+    ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)~$Voting$_fun_requireOwner();
+    $self'owner = $msg'newOwner;
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), ()) $Voting$_internal_text_63365f83ad1d185f336d0e64cfce19190f3623d6d976c30c6198ac209c8946ee((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)~$Voting$_fun_requireOwner();
+    throw_unless(59846, (now() >= ($self'startTime + $self'timeToLive)));
+    $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_context_get_sender(), true, 0, (128 + 2)));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), ()) $Voting$_internal_text_fa1a01be1e29ad0a9589a04fde70c8555eb62353556db90be422f1a9c5d7959d((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)~$Voting$_fun_requireOwner();
+    throw_unless(59846, (now() >= ($self'startTime + $self'timeToLive)));
+    $global_send($SendParameters$_constructor_to_bounce_value_mode(__tact_context_get_sender(), true, (__tact_my_balance() - 100000000), 0));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+(((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int)), ()) $Voting$_internal_binary_Deploy((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) $self, (int) $deploy) impure inline {
+    var ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive)~$Voting$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'owner, $self'organization, $self'votingId, ($self'candidates'size, $self'candidates'candidates), ($self'metadata'name, $self'metadata'description, $self'metadata'emoji, $self'metadata'website), $self'voteFee, $self'votesPerCandidate, $self'startTime, $self'timeToLive), ());
+}
+
+;;
+;; Get methods of a Contract Voting
+;;
+
+_ %organization() method_id(73639) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_organization();
+    return res;
+}
+
+_ %votingId() method_id(99756) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_votingId();
+    return res;
+}
+
+_ %candidates() method_id(105998) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_candidates();
+    return $CandidateArray$_to_external(res);
+}
+
+_ %numOfVotes() method_id(72636) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_numOfVotes();
+    return res;
+}
+
+_ %voteFee() method_id(108953) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_voteFee();
+    return res;
+}
+
+_ %votesPerCandidate() method_id(126324) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_votesPerCandidate();
+    return res;
+}
+
+_ %startTime() method_id(103324) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_startTime();
+    return res;
+}
+
+_ %timeToLive() method_id(125332) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_timeToLive();
+    return res;
+}
+
+_ %metadata() method_id(91827) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_metadata();
+    return $Metadata$_to_external(res);
+}
+
+_ %voteAddress(slice $$owner) method_id(116068) {
+    slice $owner = __tact_verify_address($$owner);
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_voteAddress($owner);
+    return res;
+}
+
+_ %basicInfo() method_id(92538) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_basicInfo();
+    return $VotingBasicInfo$_to_external(res);
+}
+
+_ %allInfo() method_id(126003) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_allInfo();
+    return $VotingAllInfo$_to_external(res);
+}
+
+_ %owner() method_id(83229) {
+    var self = $Voting$_contract_load();
+    var res = self~$Voting$_fun_owner();
+    return res;
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.workchain.v0"H >> 128,
+        "org.ton.ownable"H >> 128
+    );
+}
+
+_ get_abi_ipfs() method_id {
+    return "ipfs://QmV7Fc4vfZ9pPy8UtjoHJmLEXCYD5Zyayi54wAhbPJXKyT";
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract Voting
+;;
+
+((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int), int) $Voting$_contract_router_internal((slice, slice, int, (int, cell), (slice, slice, slice, slice), int, int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive empty message
+    if ((op == 0) & (slice_bits(in_msg) <= 32)) {
+        self~%$Voting$_internal_empty();
+        return (self, true);
+    }
+    
+    ;; Receive InitVoting message
+    if (op == 4246717119) {
+        var msg = in_msg~$InitVoting$_load();
+        self~$Voting$_internal_binary_InitVoting(msg);
+        return (self, true);
+    }
+    
+    ;; Receive InitVotingWithMetadata message
+    if (op == 3692900348) {
+        var msg = in_msg~$InitVotingWithMetadata$_load();
+        self~$Voting$_internal_binary_InitVotingWithMetadata(msg);
+        return (self, true);
+    }
+    
+    ;; Receive DeployAndCastVote message
+    if (op == 1642098951) {
+        var msg = in_msg~$DeployAndCastVote$_load();
+        self~$Voting$_internal_binary_DeployAndCastVote(msg);
+        return (self, true);
+    }
+    
+    ;; Receive DeployAndCastVoteOk message
+    if (op == 4128084533) {
+        var msg = in_msg~$DeployAndCastVoteOk$_load();
+        self~$Voting$_internal_binary_DeployAndCastVoteOk(msg);
+        return (self, true);
+    }
+    
+    ;; Receive TransferOwnership message
+    if (op == 1882669034) {
+        var msg = in_msg~$TransferOwnership$_load();
+        self~$Voting$_internal_binary_TransferOwnership(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$Voting$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "withdrawAll" message
+        if (text_op == 0x63365f83ad1d185f336d0e64cfce19190f3623d6d976c30c6198ac209c8946ee) {
+            self~$Voting$_internal_text_63365f83ad1d185f336d0e64cfce19190f3623d6d976c30c6198ac209c8946ee();
+            return (self, true);
+        }
+        
+        ;; Receive "withdrawSafe" message
+        if (text_op == 0xfa1a01be1e29ad0a9589a04fde70c8555eb62353556db90be422f1a9c5d7959d) {
+            self~$Voting$_internal_text_fa1a01be1e29ad0a9589a04fde70c8555eb62353556db90be422f1a9c5d7959d();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $Voting$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$Voting$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $Voting$_contract_store(self);
+}

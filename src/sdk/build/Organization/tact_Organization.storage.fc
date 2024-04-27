@@ -1,0 +1,411 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: Context
+;; TLB: _ bounced:bool sender:address value:int257 raw:^slice = Context
+;;
+
+_ $Context$_get_value((int, slice, int, slice) v) inline {
+    var (v'bounced, v'sender, v'value, v'raw) = v;
+    return v'value;
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body(slice to, int value, int bounce, int mode, cell body) inline {
+    return (bounce, to, value, mode, body, null(), null());
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body_code_data(slice to, int value, int bounce, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline {
+    return (bounce, to, value, mode, null(), null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int queryId) inline {
+    return (queryId);
+}
+
+;;
+;; Type: InitOrganization
+;; Header: 0x94002cae
+;; TLB: init_organization#94002cae owner:address = InitOrganization
+;;
+
+(slice, ((slice))) $InitOrganization$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2483039406);
+    var v'owner = sc_0~__tact_load_address();
+    return (sc_0, (v'owner));
+}
+
+;;
+;; Type: Metadata
+;; TLB: _ name:^string description:^string emoji:^string website:^string = Metadata
+;;
+
+builder $Metadata$_store(builder build_0, (slice, slice, slice, slice) v) inline {
+    var (v'name, v'description, v'emoji, v'website) = v;
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'description).end_cell());
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'emoji).end_cell());
+    var build_1 = begin_cell();
+    build_1 = build_1.store_ref(begin_cell().store_slice(v'website).end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, slice, slice, slice))) $Metadata$_load(slice sc_0) inline {
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'description = sc_0~load_ref().begin_parse();
+    var v'emoji = sc_0~load_ref().begin_parse();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'website = sc_1~load_ref().begin_parse();
+    return (sc_0, (v'name, v'description, v'emoji, v'website));
+}
+
+(slice, slice, slice, slice) $Metadata$_to_external(((slice, slice, slice, slice)) v) inline {
+    var (v'name, v'description, v'emoji, v'website) = v; 
+    return (v'name, v'description, v'emoji, v'website);
+}
+
+((slice, slice, slice, slice)) $Metadata$_constructor_name_description_emoji_website(slice name, slice description, slice emoji, slice website) inline {
+    return (name, description, emoji, website);
+}
+
+;;
+;; Type: InitOrganizationWithMetadata
+;; Header: 0xcaedd2bf
+;; TLB: init_organization_with_metadata#caedd2bf owner:address metadata:Metadata{name:^string,description:^string,emoji:^string,website:^string} = InitOrganizationWithMetadata
+;;
+
+(slice, ((slice, (slice, slice, slice, slice)))) $InitOrganizationWithMetadata$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3404583615);
+    var v'owner = sc_0~__tact_load_address();
+    var v'metadata = sc_0~$Metadata$_load();
+    return (sc_0, (v'owner, v'metadata));
+}
+
+;;
+;; Type: UpdateOrganizationInfo
+;; Header: 0x84698a07
+;; TLB: update_organization_info#84698a07 emoji:^string name:^string description:^string website:^string = UpdateOrganizationInfo
+;;
+
+(slice, ((slice, slice, slice, slice))) $UpdateOrganizationInfo$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2221509127);
+    var v'emoji = sc_0~load_ref().begin_parse();
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'description = sc_0~load_ref().begin_parse();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'website = sc_1~load_ref().begin_parse();
+    return (sc_0, (v'emoji, v'name, v'description, v'website));
+}
+
+;;
+;; Type: CandidateArray
+;; TLB: _ size:uint8 candidates:dict<uint64, ^Candidate{name:^string,info:^string,votes:uint64}> = CandidateArray
+;;
+
+builder $CandidateArray$_store(builder build_0, (int, cell) v) inline {
+    var (v'size, v'candidates) = v;
+    build_0 = build_0.store_uint(v'size, 8);
+    build_0 = build_0.store_dict(v'candidates);
+    return build_0;
+}
+
+(slice, ((int, cell))) $CandidateArray$_load(slice sc_0) inline {
+    var v'size = sc_0~load_uint(8);
+    var v'candidates = sc_0~load_dict();
+    return (sc_0, (v'size, v'candidates));
+}
+
+;;
+;; Type: DeployVoting
+;; Header: 0x8c30e194
+;; TLB: deploy_voting#8c30e194 candidates:CandidateArray{size:uint8,candidates:dict<uint64, ^Candidate{name:^string,info:^string,votes:uint64}>} voteFee:uint64 votesPerCandidate:uint8 startTime:uint64 timeToLive:uint64 = DeployVoting
+;;
+
+(slice, (((int, cell), int, int, int, int))) $DeployVoting$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2352013716);
+    var v'candidates = sc_0~$CandidateArray$_load();
+    var v'voteFee = sc_0~load_uint(64);
+    var v'votesPerCandidate = sc_0~load_uint(8);
+    var v'startTime = sc_0~load_uint(64);
+    var v'timeToLive = sc_0~load_uint(64);
+    return (sc_0, (v'candidates, v'voteFee, v'votesPerCandidate, v'startTime, v'timeToLive));
+}
+
+;;
+;; Type: DeployVotingWithMetadata
+;; Header: 0xc1f3cbaf
+;; TLB: deploy_voting_with_metadata#c1f3cbaf candidates:CandidateArray{size:uint8,candidates:dict<uint64, ^Candidate{name:^string,info:^string,votes:uint64}>} voteFee:uint64 votesPerCandidate:uint8 startTime:uint64 timeToLive:uint64 metadata:Metadata{name:^string,description:^string,emoji:^string,website:^string} = DeployVotingWithMetadata
+;;
+
+(slice, (((int, cell), int, int, int, int, (slice, slice, slice, slice)))) $DeployVotingWithMetadata$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 3253980079);
+    var v'candidates = sc_0~$CandidateArray$_load();
+    var v'voteFee = sc_0~load_uint(64);
+    var v'votesPerCandidate = sc_0~load_uint(8);
+    var v'startTime = sc_0~load_uint(64);
+    var v'timeToLive = sc_0~load_uint(64);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'metadata = sc_1~$Metadata$_load();
+    return (sc_0, (v'candidates, v'voteFee, v'votesPerCandidate, v'startTime, v'timeToLive, v'metadata));
+}
+
+;;
+;; Type: SetDeployVotingFee
+;; Header: 0xe91f83f1
+;; TLB: set_deploy_voting_fee#e91f83f1 newFee:uint64 = SetDeployVotingFee
+;;
+
+(slice, ((int))) $SetDeployVotingFee$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3911156721);
+    var v'newFee = sc_0~load_uint(64);
+    return (sc_0, (v'newFee));
+}
+
+;;
+;; Type: OrganizationBasicInfo
+;; TLB: _ emoji:^string name:^string website:^string = OrganizationBasicInfo
+;;
+
+(slice, slice, slice) $OrganizationBasicInfo$_to_external(((slice, slice, slice)) v) inline {
+    var (v'emoji, v'name, v'website) = v; 
+    return (v'emoji, v'name, v'website);
+}
+
+((slice, slice, slice)) $OrganizationBasicInfo$_constructor_emoji_name_website(slice emoji, slice name, slice website) inline {
+    return (emoji, name, website);
+}
+
+;;
+;; Type: OrganizationAllInfo
+;; TLB: _ owner:address emoji:^string name:^string description:^string website:^string numOfVotings:uint64 = OrganizationAllInfo
+;;
+
+(slice, slice, slice, slice, slice, int) $OrganizationAllInfo$_to_external(((slice, slice, slice, slice, slice, int)) v) inline {
+    var (v'owner, v'emoji, v'name, v'description, v'website, v'numOfVotings) = v; 
+    return (v'owner, v'emoji, v'name, v'description, v'website, v'numOfVotings);
+}
+
+((slice, slice, slice, slice, slice, int)) $OrganizationAllInfo$_constructor_owner_emoji_name_description_website_numOfVotings(slice owner, slice emoji, slice name, slice description, slice website, int numOfVotings) inline {
+    return (owner, emoji, name, description, website, numOfVotings);
+}
+
+;;
+;; Type: Withdraw
+;; Header: 0x0ba69751
+;; TLB: withdraw#0ba69751 amount:coins = Withdraw
+;;
+
+(slice, ((int))) $Withdraw$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 195467089);
+    var v'amount = sc_0~load_coins();
+    return (sc_0, (v'amount));
+}
+
+;;
+;; Type: TransferOwnership
+;; Header: 0x70373fea
+;; TLB: transfer_ownership#70373fea newOwner:address = TransferOwnership
+;;
+
+(slice, ((slice))) $TransferOwnership$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1882669034);
+    var v'newOwner = sc_0~__tact_load_address();
+    return (sc_0, (v'newOwner));
+}
+
+;;
+;; Type: InitVoting
+;; Header: 0xfd1fc2bf
+;; TLB: init_voting#fd1fc2bf owner:address candidates:CandidateArray{size:uint8,candidates:dict<uint64, ^Candidate{name:^string,info:^string,votes:uint64}>} voteFee:uint64 votesPerCandidate:uint8 startTime:uint64 timeToLive:uint64 = InitVoting
+;;
+
+builder $InitVoting$_store(builder build_0, (slice, (int, cell), int, int, int, int) v) inline_ref {
+    var (v'owner, (v'candidates'size, v'candidates'candidates), v'voteFee, v'votesPerCandidate, v'startTime, v'timeToLive) = v;
+    build_0 = store_uint(build_0, 4246717119, 32);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = $CandidateArray$_store(build_0, (v'candidates'size, v'candidates'candidates));
+    build_0 = build_0.store_uint(v'voteFee, 64);
+    build_0 = build_0.store_uint(v'votesPerCandidate, 8);
+    build_0 = build_0.store_uint(v'startTime, 64);
+    build_0 = build_0.store_uint(v'timeToLive, 64);
+    return build_0;
+}
+
+cell $InitVoting$_store_cell((slice, (int, cell), int, int, int, int) v) inline {
+    return $InitVoting$_store(begin_cell(), v).end_cell();
+}
+
+((slice, (int, cell), int, int, int, int)) $InitVoting$_constructor_owner_candidates_voteFee_votesPerCandidate_startTime_timeToLive(slice owner, (int, cell) candidates, int voteFee, int votesPerCandidate, int startTime, int timeToLive) inline {
+    return (owner, candidates, voteFee, votesPerCandidate, startTime, timeToLive);
+}
+
+;;
+;; Type: InitVotingWithMetadata
+;; Header: 0xdc1d2ffc
+;; TLB: init_voting_with_metadata#dc1d2ffc owner:address candidates:CandidateArray{size:uint8,candidates:dict<uint64, ^Candidate{name:^string,info:^string,votes:uint64}>} voteFee:uint64 votesPerCandidate:uint8 startTime:uint64 timeToLive:uint64 metadata:Metadata{name:^string,description:^string,emoji:^string,website:^string} = InitVotingWithMetadata
+;;
+
+builder $InitVotingWithMetadata$_store(builder build_0, (slice, (int, cell), int, int, int, int, (slice, slice, slice, slice)) v) inline_ref {
+    var (v'owner, (v'candidates'size, v'candidates'candidates), v'voteFee, v'votesPerCandidate, v'startTime, v'timeToLive, (v'metadata'name, v'metadata'description, v'metadata'emoji, v'metadata'website)) = v;
+    build_0 = store_uint(build_0, 3692900348, 32);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = $CandidateArray$_store(build_0, (v'candidates'size, v'candidates'candidates));
+    build_0 = build_0.store_uint(v'voteFee, 64);
+    build_0 = build_0.store_uint(v'votesPerCandidate, 8);
+    build_0 = build_0.store_uint(v'startTime, 64);
+    build_0 = build_0.store_uint(v'timeToLive, 64);
+    var build_1 = begin_cell();
+    build_1 = $Metadata$_store(build_1, (v'metadata'name, v'metadata'description, v'metadata'emoji, v'metadata'website));
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $InitVotingWithMetadata$_store_cell((slice, (int, cell), int, int, int, int, (slice, slice, slice, slice)) v) inline {
+    return $InitVotingWithMetadata$_store(begin_cell(), v).end_cell();
+}
+
+((slice, (int, cell), int, int, int, int, (slice, slice, slice, slice))) $InitVotingWithMetadata$_constructor_owner_candidates_voteFee_votesPerCandidate_startTime_timeToLive_metadata(slice owner, (int, cell) candidates, int voteFee, int votesPerCandidate, int startTime, int timeToLive, (slice, slice, slice, slice) metadata) inline {
+    return (owner, candidates, voteFee, votesPerCandidate, startTime, timeToLive, metadata);
+}
+
+;;
+;; Type: Voting
+;;
+
+builder $Voting$init$_store(builder build_0, (slice, int) v) inline {
+    var (v'organization, v'votingId) = v;
+    build_0 = __tact_store_address(build_0, v'organization);
+    build_0 = build_0.store_int(v'votingId, 257);
+    return build_0;
+}
+
+(cell, cell) $Voting$_init_child(cell sys', slice $organization, int $votingId) inline_ref {
+    slice sc' = sys'.begin_parse();
+    cell source = sc'~load_dict();
+    cell contracts = new_dict();
+    
+    ;; Contract Code: Voting
+    cell mine = __tact_dict_get_code(source, 14410);
+    contracts = __tact_dict_set_code(contracts, 14410, mine);
+    
+    ;; Contract Code: Vote
+    cell code_7526 = __tact_dict_get_code(source, 7526);
+    contracts = __tact_dict_set_code(contracts, 7526, code_7526);
+    
+    ;; Build cell
+    builder b = begin_cell();
+    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
+    b = b.store_int(false, 1);
+    b = $Voting$init$_store(b, ($organization, $votingId));
+    return (mine, b.end_cell());
+}
+
+;;
+;; Type: Organization
+;;
+
+builder $Organization$_store(builder build_0, (slice, int, (slice, slice, slice, slice), slice, int, int, int) v) inline {
+    var (v'repository, v'organizationId, (v'metadata'name, v'metadata'description, v'metadata'emoji, v'metadata'website), v'owner, v'numOfVotings, v'deployVotingFee, v'lastChanged) = v;
+    build_0 = __tact_store_address(build_0, v'repository);
+    build_0 = build_0.store_uint(v'organizationId, 64);
+    var build_1 = begin_cell();
+    build_1 = $Metadata$_store(build_1, (v'metadata'name, v'metadata'description, v'metadata'emoji, v'metadata'website));
+    build_1 = __tact_store_address(build_1, v'owner);
+    build_1 = build_1.store_uint(v'numOfVotings, 64);
+    build_1 = build_1.store_uint(v'deployVotingFee, 64);
+    build_1 = build_1.store_uint(v'lastChanged, 64);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, int, (slice, slice, slice, slice), slice, int, int, int))) $Organization$_load(slice sc_0) inline {
+    var v'repository = sc_0~__tact_load_address();
+    var v'organizationId = sc_0~load_uint(64);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'metadata = sc_1~$Metadata$_load();
+    var v'owner = sc_1~__tact_load_address();
+    var v'numOfVotings = sc_1~load_uint(64);
+    var v'deployVotingFee = sc_1~load_uint(64);
+    var v'lastChanged = sc_1~load_uint(64);
+    return (sc_0, (v'repository, v'organizationId, v'metadata, v'owner, v'numOfVotings, v'deployVotingFee, v'lastChanged));
+}
+
+(slice, ((slice, int))) $Organization$init$_load(slice sc_0) inline {
+    var v'repository = sc_0~__tact_load_address();
+    var v'organizationId = sc_0~load_int(257);
+    return (sc_0, (v'repository, v'organizationId));
+}
+
+(slice, int, (slice, slice, slice, slice), slice, int, int, int) $Organization$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$Organization$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (slice repository, int organizationId) = $sc~$Organization$init$_load();
+        $sc.end_parse();
+        return $Organization$_contract_init(repository, organizationId);
+    }
+}
+
+() $Organization$_contract_store((slice, int, (slice, slice, slice, slice), slice, int, int, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $Organization$_store(b, v);
+    set_data(b.end_cell());
+}

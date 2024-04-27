@@ -1,0 +1,271 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: Context
+;; TLB: _ bounced:bool sender:address value:int257 raw:^slice = Context
+;;
+
+_ $Context$_get_value((int, slice, int, slice) v) inline {
+    var (v'bounced, v'sender, v'value, v'raw) = v;
+    return v'value;
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_bounce_mode_body_code_data(slice to, int value, int bounce, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline {
+    return (bounce, to, value, mode, null(), null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int queryId) inline {
+    return (queryId);
+}
+
+;;
+;; Type: Metadata
+;; TLB: _ name:^string description:^string emoji:^string website:^string = Metadata
+;;
+
+builder $Metadata$_store(builder build_0, (slice, slice, slice, slice) v) inline {
+    var (v'name, v'description, v'emoji, v'website) = v;
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'description).end_cell());
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'emoji).end_cell());
+    var build_1 = begin_cell();
+    build_1 = build_1.store_ref(begin_cell().store_slice(v'website).end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, slice, slice, slice))) $Metadata$_load(slice sc_0) inline {
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'description = sc_0~load_ref().begin_parse();
+    var v'emoji = sc_0~load_ref().begin_parse();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'website = sc_1~load_ref().begin_parse();
+    return (sc_0, (v'name, v'description, v'emoji, v'website));
+}
+
+;;
+;; Type: DeployOrganizationWithMetadata
+;; Header: 0xe828871c
+;; TLB: deploy_organization_with_metadata#e828871c metadata:Metadata{name:^string,description:^string,emoji:^string,website:^string} = DeployOrganizationWithMetadata
+;;
+
+(slice, (((slice, slice, slice, slice)))) $DeployOrganizationWithMetadata$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3894970140);
+    var v'metadata = sc_0~$Metadata$_load();
+    return (sc_0, (v'metadata));
+}
+
+;;
+;; Type: SetDeployOrgFee
+;; Header: 0x094b2273
+;; TLB: set_deploy_org_fee#094b2273 newFee:uint64 = SetDeployOrgFee
+;;
+
+(slice, ((int))) $SetDeployOrgFee$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 155918963);
+    var v'newFee = sc_0~load_uint(64);
+    return (sc_0, (v'newFee));
+}
+
+;;
+;; Type: Withdraw
+;; Header: 0x0ba69751
+;; TLB: withdraw#0ba69751 amount:coins = Withdraw
+;;
+
+(slice, ((int))) $Withdraw$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 195467089);
+    var v'amount = sc_0~load_coins();
+    return (sc_0, (v'amount));
+}
+
+;;
+;; Type: TransferOwnership
+;; Header: 0x70373fea
+;; TLB: transfer_ownership#70373fea newOwner:address = TransferOwnership
+;;
+
+(slice, ((slice))) $TransferOwnership$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1882669034);
+    var v'newOwner = sc_0~__tact_load_address();
+    return (sc_0, (v'newOwner));
+}
+
+;;
+;; Type: InitOrganization
+;; Header: 0x94002cae
+;; TLB: init_organization#94002cae owner:address = InitOrganization
+;;
+
+builder $InitOrganization$_store(builder build_0, (slice) v) inline {
+    var (v'owner) = v;
+    build_0 = store_uint(build_0, 2483039406, 32);
+    build_0 = __tact_store_address(build_0, v'owner);
+    return build_0;
+}
+
+cell $InitOrganization$_store_cell((slice) v) inline {
+    return $InitOrganization$_store(begin_cell(), v).end_cell();
+}
+
+((slice)) $InitOrganization$_constructor_owner(slice owner) inline {
+    return (owner);
+}
+
+;;
+;; Type: InitOrganizationWithMetadata
+;; Header: 0xcaedd2bf
+;; TLB: init_organization_with_metadata#caedd2bf owner:address metadata:Metadata{name:^string,description:^string,emoji:^string,website:^string} = InitOrganizationWithMetadata
+;;
+
+builder $InitOrganizationWithMetadata$_store(builder build_0, (slice, (slice, slice, slice, slice)) v) inline {
+    var (v'owner, (v'metadata'name, v'metadata'description, v'metadata'emoji, v'metadata'website)) = v;
+    build_0 = store_uint(build_0, 3404583615, 32);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = $Metadata$_store(build_0, (v'metadata'name, v'metadata'description, v'metadata'emoji, v'metadata'website));
+    return build_0;
+}
+
+cell $InitOrganizationWithMetadata$_store_cell((slice, (slice, slice, slice, slice)) v) inline {
+    return $InitOrganizationWithMetadata$_store(begin_cell(), v).end_cell();
+}
+
+((slice, (slice, slice, slice, slice))) $InitOrganizationWithMetadata$_constructor_owner_metadata(slice owner, (slice, slice, slice, slice) metadata) inline {
+    return (owner, metadata);
+}
+
+;;
+;; Type: Organization
+;;
+
+builder $Organization$init$_store(builder build_0, (slice, int) v) inline {
+    var (v'repository, v'organizationId) = v;
+    build_0 = __tact_store_address(build_0, v'repository);
+    build_0 = build_0.store_int(v'organizationId, 257);
+    return build_0;
+}
+
+(cell, cell) $Organization$_init_child(cell sys', slice $repository, int $organizationId) inline_ref {
+    slice sc' = sys'.begin_parse();
+    cell source = sc'~load_dict();
+    cell contracts = new_dict();
+    
+    ;; Contract Code: Organization
+    cell mine = __tact_dict_get_code(source, 28935);
+    contracts = __tact_dict_set_code(contracts, 28935, mine);
+    
+    ;; Contract Code: Voting
+    cell code_14410 = __tact_dict_get_code(source, 14410);
+    contracts = __tact_dict_set_code(contracts, 14410, code_14410);
+    
+    ;; Contract Code: Vote
+    cell code_7526 = __tact_dict_get_code(source, 7526);
+    contracts = __tact_dict_set_code(contracts, 7526, code_7526);
+    
+    ;; Build cell
+    builder b = begin_cell();
+    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
+    b = b.store_int(false, 1);
+    b = $Organization$init$_store(b, ($repository, $organizationId));
+    return (mine, b.end_cell());
+}
+
+;;
+;; Type: Repository
+;;
+
+builder $Repository$_store(builder build_0, (slice, int, int, int) v) inline {
+    var (v'owner, v'repositoryId, v'numOfOrganizations, v'deployOrganizationFee) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_uint(v'repositoryId, 64);
+    build_0 = build_0.store_uint(v'numOfOrganizations, 64);
+    build_0 = build_0.store_uint(v'deployOrganizationFee, 64);
+    return build_0;
+}
+
+(slice, ((slice, int, int, int))) $Repository$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'repositoryId = sc_0~load_uint(64);
+    var v'numOfOrganizations = sc_0~load_uint(64);
+    var v'deployOrganizationFee = sc_0~load_uint(64);
+    return (sc_0, (v'owner, v'repositoryId, v'numOfOrganizations, v'deployOrganizationFee));
+}
+
+(slice, ((int))) $Repository$init$_load(slice sc_0) inline {
+    var v'repositoryId = sc_0~load_int(257);
+    return (sc_0, (v'repositoryId));
+}
+
+(slice, int, int, int) $Repository$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$Repository$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (int repositoryId) = $sc~$Repository$init$_load();
+        $sc.end_parse();
+        return $Repository$_contract_init(repositoryId);
+    }
+}
+
+() $Repository$_contract_store((slice, int, int, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $Repository$_store(b, v);
+    set_data(b.end_cell());
+}
